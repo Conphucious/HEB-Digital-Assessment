@@ -1,0 +1,14 @@
+[
+  {
+    name: "appedia",
+    upcEndpoint: "https://appedia.heb-platform-interview.hebdigital-prd.com/api/v1/itemdata?upc="
+  },
+  {
+    name: "microamazon",
+    upcEndpoint: "https://appedia.heb-platform-interview.hebdigital-prd.com/api/v1/itemdata?upc="
+  },
+  {
+    name: "googdit",
+    upcEndpoint: "https://appedia.heb-platform-interview.hebdigital-prd.com/api/v1/itemdata?upc="
+  },
+]

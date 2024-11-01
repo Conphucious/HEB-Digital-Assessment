@@ -1,7 +1,7 @@
 <h1>HEB Digital - Assessment</h1>
 For the sake of this assessment, I will not be creating a feature branch like 
 formal engineering practices would dictate as well as not squashing the final features like each PR would represent. 
-I will also ignore DI and using a framework to complete this exercise timely.
+I will also ignore DI and using a framework to complete this exercise timely. I will also use souts instead of loggers (SLF4J/Log4J) to save time.
 
 The problem selected is the <b>Price Comparison Tool Problem</b>.
 

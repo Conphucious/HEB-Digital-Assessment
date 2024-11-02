@@ -1,8 +1,11 @@
 package com.github.conphucious.pricecomparator.service;
 
+import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
 import com.github.conphucious.pricecomparator.model.UPCData;
 
+import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Request service interface which defines the HTTP request calls for a given UPC.
@@ -10,9 +13,10 @@ import java.util.List;
 public interface RequestService {
 
     /**
-     * Make an HTTP request to UPC data from specified merchants (#see MerchantUrlLoaderUtil class)
+     * Make an HTTP request to UPC data from specified merchants (#see MerchantUrlLoaderUtil class).
+     * Only includes successful responses, not unsuccessful responses.
      * @param upc - universal product code
-     * @return Response list of UPCData as a result of the HTTP calls.
+     * @return Map of merchants to successful http response objects
      */
-    List<UPCData> requestMerchantUpcData(int upc);
+    Map<Merchant, HttpResponse<String>> requestMerchantData(int upc);
 }

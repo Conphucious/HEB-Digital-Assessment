@@ -1,9 +1,10 @@
 package com.github.conphucious.pricecomparator.model;
 
-import com.github.conphucious.pricecomparator.dto.Merchant;
+import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.Optional;
 
@@ -11,8 +12,8 @@ import java.util.Optional;
  * POJO model representing the price, availability, and quantity (if applicable through availability) of a UPC.
  */
 
+@ToString
 @Getter
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class UPCData {
     private final Merchant merchant;
@@ -23,7 +24,4 @@ public class UPCData {
     private final int upc;
     private final double price;
     private final boolean isAvailable;
-
-    // Only exists on isAvailable clause
-    private Optional<Integer> quantityAvailable;
 }

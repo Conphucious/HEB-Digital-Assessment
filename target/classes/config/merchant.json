@@ -4,7 +4,7 @@
     "endpoint": "https://appedia.heb-platform-interview.hebdigital-prd.com/api/v1/itemdata?upc=PLACEHOLDER_VALUE"
   },
   {
-    "name": "microamazon",
+    "name": "micromazon",
     "endpoint": "https://micromazon.heb-platform-interview.hebdigital-prd.com/PLACEHOLDER_VALUE/productinfo"
   },
   {

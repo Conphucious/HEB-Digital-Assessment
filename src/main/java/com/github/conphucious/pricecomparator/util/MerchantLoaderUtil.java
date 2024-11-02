@@ -1,7 +1,7 @@
 package com.github.conphucious.pricecomparator.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.conphucious.pricecomparator.dto.Merchant;
+import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;

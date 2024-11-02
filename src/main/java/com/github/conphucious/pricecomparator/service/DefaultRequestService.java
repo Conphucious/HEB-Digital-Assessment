@@ -1,6 +1,6 @@
 package com.github.conphucious.pricecomparator.service;
 
-import com.github.conphucious.pricecomparator.dto.Merchant;
+import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
 import com.github.conphucious.pricecomparator.model.UPCData;
 import com.github.conphucious.pricecomparator.util.MerchantLoaderUtil;
 
@@ -10,6 +10,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DefaultRequestService implements RequestService {
 
@@ -23,32 +26,35 @@ public class DefaultRequestService implements RequestService {
     }
 
     @Override
-    public List<UPCData> requestMerchantUpcData(int upc) {
+    public Map<Merchant, HttpResponse<String>> requestMerchantData(int upc) {
         List<Merchant> merchants = MerchantLoaderUtil.getMerchants();
-
-        for (Merchant merchant : merchants) {
-            String endpoint = merchant.getEndpoint().replace(PLACEHOLDER_VALUE_KEY, String.valueOf(upc));
-            getRequestMerchant(endpoint);
-        }
-        return null;
+        return merchants
+                .stream()
+                .collect(Collectors.toMap(merchant -> merchant, merchant -> getRequestMerchant(merchant, upc).orElse(null)));
     }
 
-    private UPCData getRequestMerchant(String endpoint) {
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(endpoint))
-                .build();
+    private Optional<HttpResponse<String>> getRequestMerchant(Merchant merchant, int upc) {
+        String endpoint = merchant.getEndpoint().replace(PLACEHOLDER_VALUE_KEY, String.valueOf(upc));
+        merchant.setEndpoint(endpoint); // mutate original
 
-        HttpResponse<String> response = null;
+        // HTTP Request
         try {
-            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response);
-            System.out.println(response.body());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create(endpoint))
+                    .build();
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Requests for merchant '" + merchant.getName() + "' was: " + response.statusCode()); // log.debug
+                return Optional.of(response);
+            } else {
+                System.out.println("An error occurred making an HTTP GET request to '" + merchant.getName() + "'. with code: " + response.statusCode()); // log.warn
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("An error occurred making an HTTP GET request to '" + merchant.getName() + "'. with code"); // log.warn
         }
-        return null;
+
+        return Optional.empty();
     }
 }

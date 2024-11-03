@@ -1,7 +1,6 @@
 package com.github.conphucious.pricecomparator.service;
 
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
-import com.github.conphucious.pricecomparator.model.UPCData;
 import com.github.conphucious.pricecomparator.util.MerchantLoaderUtil;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 public class DefaultRequestService implements RequestService {
 
     private final HttpClient httpClient;
-    private final static String PLACEHOLDER_VALUE_KEY = "PLACEHOLDER_VALUE";
+    private final static String PLACEHOLDER_VALUE_KEY = "PLACEHOLDER_VALUE"; // Used to inject UPC into endpoint URI.
 
     public DefaultRequestService() {
         httpClient = HttpClient.newBuilder()
@@ -27,15 +26,23 @@ public class DefaultRequestService implements RequestService {
 
     @Override
     public Map<Merchant, HttpResponse<String>> requestMerchantData(int upc) {
-        List<Merchant> merchants = MerchantLoaderUtil.getMerchants();
+        List<Merchant> merchants = MerchantLoaderUtil.getMerchantData();
         return merchants
                 .stream()
-                .collect(Collectors.toMap(merchant -> merchant, merchant -> getRequestMerchant(merchant, upc).orElse(null)));
+                .collect(
+                        Collectors.toMap(
+                                merchant -> merchant,
+                                merchant -> getRequestMerchant(merchant, upc).orElse(null))
+                        // Alternatively can return optional instead of allowing null value.
+                );
     }
 
     private Optional<HttpResponse<String>> getRequestMerchant(Merchant merchant, int upc) {
+        // Inject UPC into Endpoint URI. Can alternatively make a service which cleans/etls this data or MerchantLoaderUtil.
         String endpoint = merchant.getEndpoint().replace(PLACEHOLDER_VALUE_KEY, String.valueOf(upc));
-        merchant.setEndpoint(endpoint); // mutate original
+
+        // mutate original endpoint <-- not ideal in workflow. See above comment
+        merchant.setEndpoint(endpoint);
 
         // HTTP Request
         try {

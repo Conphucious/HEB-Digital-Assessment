@@ -1,21 +1,18 @@
 package com.github.conphucious.pricecomparator.model;
 
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-import java.util.Optional;
-
 /**
- * POJO model representing the price, availability, and quantity (if applicable through availability) of a UPC.
+ * POJO model representing the price and availability of a given UPC per merchant.
  */
 
 @ToString
 @Getter
 @RequiredArgsConstructor
-public class UPCData {
+public class UpcData {
     private final Merchant merchant;
     /*
         We will ignore the true data structure of a universal product code which may be better suited as an array

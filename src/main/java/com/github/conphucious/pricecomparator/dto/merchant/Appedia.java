@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for Appedia merchant http response data from Jackson Object Mapper.
+ */
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

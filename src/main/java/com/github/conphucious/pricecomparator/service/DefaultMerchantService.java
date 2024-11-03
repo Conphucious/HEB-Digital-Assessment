@@ -7,58 +7,58 @@ import com.github.conphucious.pricecomparator.dto.merchant.Googdit;
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
 import com.github.conphucious.pricecomparator.dto.merchant.MerchantName;
 import com.github.conphucious.pricecomparator.dto.merchant.Micromazon;
-import com.github.conphucious.pricecomparator.model.UPCData;
+import com.github.conphucious.pricecomparator.model.UpcData;
 
 import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DefaultMerchantService implements MerchantService {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public List<UPCData> convertToDto(Map<Merchant, HttpResponse<String>> merchantHttpResponseMap, int upc) {
-
-        Set<Merchant> validMerchants = merchantHttpResponseMap.keySet()
-                .stream()
-                .filter(key -> merchantHttpResponseMap.get(key) != null)
-                .collect(Collectors.toSet());
-
+    public List<UpcData> convertToUpcData(Map<Merchant, HttpResponse<String>> merchantHttpResponseMap, int upc) {
         return merchantHttpResponseMap.entrySet()
                 .stream()
-                .filter(entrySet -> entrySet.getValue() != null) // non null values
+                .filter(entrySet -> entrySet.getValue() != null) // non null values.
                 .map(entrySet -> mapMerchantToUpcData(entrySet.getKey(), entrySet.getValue(), upc))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UPCData parseAppediaVendorUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) throws JsonProcessingException {
+    public UpcData parseAppediaVendorUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) throws JsonProcessingException {
         Appedia appedia = objectMapper.readValue(httpResponse.body(), Appedia.class);
         Double price = Double.valueOf(appedia.getPrice().replace("$", ""));
         boolean isAvailable = appedia.getStock() > 1;
-        return new UPCData(merchant, upc, price, isAvailable);
+        return new UpcData(merchant, upc, price, isAvailable);
     }
 
     @Override
-    public UPCData parseMicromazonVendorUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) throws JsonProcessingException {
+    public UpcData parseMicromazonVendorUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) throws JsonProcessingException {
         Micromazon micromazon = objectMapper.readValue(httpResponse.body(), Micromazon.class);
-        return new UPCData(merchant, upc, micromazon.getPrice(), micromazon.getAvailable());
+        return new UpcData(merchant, upc, micromazon.getPrice(), micromazon.getAvailable());
     }
 
     @Override
-    public UPCData parseGoogditVendorUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) throws JsonProcessingException {
+    public UpcData parseGoogditVendorUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) throws JsonProcessingException {
         Googdit googdit = objectMapper.readValue(httpResponse.body(), Googdit.class);
         Double price = Double.valueOf(googdit.getP() * 1000000); // microcents
-        boolean isAvailable = !Arrays.asList(googdit.getA()).isEmpty();
-        return new UPCData(merchant, upc, price, isAvailable);
+
+        List<Googdit.Availability> googditAvailabilityList = Arrays.asList(googdit.getA());
+        // If availability quantity is 1 or greater in the list
+        boolean isAvailable = !Arrays.asList(googdit.getA()).isEmpty()
+                && googditAvailabilityList.stream().filter(a -> a.getQ() > 0)
+                .count() > 0;
+        return new UpcData(merchant, upc, price, isAvailable);
     }
 
-    private UPCData mapMerchantToUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) {
-        // determine which vendor
-
+    /*
+        Determine vendor to UpcData mapping. MUST return value.
+     */
+    private UpcData mapMerchantToUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) {
+        // Alternatively can use factory class
         try {
             if (merchant.getName().equalsIgnoreCase(MerchantName.APPEDIA)) {
                 return parseAppediaVendorUpcData(merchant, httpResponse, upc);

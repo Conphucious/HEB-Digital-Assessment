@@ -5,11 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * General DTO used for converting Merchant json data into a DTO. (#see MerchantLoaderUtil).
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Merchant {
     private String name;
-    @Setter
-    private String endpoint;
+    @Setter // Used to inject endpoint with upc.
+    private String endpoint; // alternatively if multiple endpoints exist, can refactor to upcEndpoint
 }

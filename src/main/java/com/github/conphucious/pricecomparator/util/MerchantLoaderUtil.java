@@ -13,20 +13,25 @@ import java.util.List;
 @UtilityClass
 public class MerchantLoaderUtil {
 
-    public static List<Merchant> getMerchants() {
+    /**
+     * Converts merchant data from classpath > resources/config/merchant.json into Merchant DTOs.
+     *
+     * @return List of Merchants
+     */
+    public static List<Merchant> getMerchantData() {
         try {
             URL configUrl = getConfigurationPath();
             ObjectMapper objectMapper = new ObjectMapper();
             return Arrays.asList(objectMapper.readValue(new File(configUrl.getPath()), Merchant[].class));
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("An error has occurred reading in the path of merchants.json: " + e.getMessage()); // Log error
         }
 
-        throw new IllegalStateException("Illegal state when retrieving merchants.");
+        throw new IllegalStateException("Illegal state when retrieving merchants via util.MerchantLoaderUtil#getMerchantData"); // log.error
     }
 
-    private URL getConfigurationPath() {
+    // Can alternatively be a class on its own definition like MerchantName
+    protected URL getConfigurationPath() {
         return MerchantLoaderUtil.class.getClassLoader().getResource("config/merchant.json");
     }
 

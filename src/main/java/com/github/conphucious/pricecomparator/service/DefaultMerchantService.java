@@ -55,7 +55,7 @@ public class DefaultMerchantService implements MerchantService {
     }
 
     /*
-        Determine vendor to UpcData mapping. MUST return value.
+        Determine vendor to UpcData mapping. MUST return value. (#see dto.merchant.RegisteredMerchant)
      */
     private UpcData mapMerchantToUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) {
         // Alternatively can use factory class

@@ -10,12 +10,16 @@ import com.github.conphucious.pricecomparator.service.RequestService;
 
 public class Application {
     public static void main(String[] args) {
+        // Normally DI such as GUICE or Spring DI
         RequestService requestService = new DefaultRequestService();
         MerchantService merchantService = new DefaultMerchantService();
         PriceComparisonService priceComparisonService = new DefaultPriceComparisonService();
         PriceComparisonController priceComparisonController =
                 new PriceComparisonController(requestService, merchantService, priceComparisonService);
-        String urls = priceComparisonController.determineUrlOfLowestUpcPriceWithAvailability(101);
-        System.out.println("URLs: " + urls);
+
+        // Requirement output:
+        int upc = 101;
+        String urls = priceComparisonController.determineUrlOfLowestUpcPriceWithAvailability(upc);
+        System.out.println("Lowest price available vendor URL(s) for upc '" + upc + "' at '" + System.currentTimeMillis() + "': '" + urls + "'");
     }
 }

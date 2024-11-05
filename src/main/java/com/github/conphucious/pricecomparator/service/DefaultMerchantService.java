@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.conphucious.pricecomparator.dto.merchant.Appedia;
 import com.github.conphucious.pricecomparator.dto.merchant.Googdit;
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
-import com.github.conphucious.pricecomparator.dto.merchant.MerchantName;
+import com.github.conphucious.pricecomparator.dto.merchant.RegisteredMerchant;
 import com.github.conphucious.pricecomparator.dto.merchant.Micromazon;
 import com.github.conphucious.pricecomparator.model.UpcData;
 
@@ -44,7 +44,7 @@ public class DefaultMerchantService implements MerchantService {
     @Override
     public UpcData parseGoogditVendorUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) throws JsonProcessingException {
         Googdit googdit = objectMapper.readValue(httpResponse.body(), Googdit.class);
-        Double price = Double.valueOf(googdit.getP() * 1000000); // microcents
+        Double price = Double.valueOf(googdit.getP()) / 100000000; // microcents
 
         List<Googdit.Availability> googditAvailabilityList = Arrays.asList(googdit.getA());
         // If availability quantity is 1 or greater in the list
@@ -60,11 +60,11 @@ public class DefaultMerchantService implements MerchantService {
     private UpcData mapMerchantToUpcData(Merchant merchant, HttpResponse<String> httpResponse, int upc) {
         // Alternatively can use factory class
         try {
-            if (merchant.getName().equalsIgnoreCase(MerchantName.APPEDIA)) {
+            if (merchant.getName().equalsIgnoreCase(RegisteredMerchant.APPEDIA)) {
                 return parseAppediaVendorUpcData(merchant, httpResponse, upc);
-            } else if (merchant.getName().equalsIgnoreCase(MerchantName.MICROMAZON)) {
+            } else if (merchant.getName().equalsIgnoreCase(RegisteredMerchant.MICROMAZON)) {
                 return parseMicromazonVendorUpcData(merchant, httpResponse, upc);
-            } else if (merchant.getName().equalsIgnoreCase(MerchantName.GOOGDIT)) {
+            } else if (merchant.getName().equalsIgnoreCase(RegisteredMerchant.GOOGDIT)) {
                 return parseGoogditVendorUpcData(merchant, httpResponse, upc);
             }
         } catch (JsonProcessingException e) {

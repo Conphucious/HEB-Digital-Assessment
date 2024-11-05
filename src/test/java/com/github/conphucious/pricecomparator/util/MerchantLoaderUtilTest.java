@@ -1,7 +1,7 @@
 package com.github.conphucious.pricecomparator.util;
 
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
-import com.github.conphucious.pricecomparator.dto.merchant.MerchantName;
+import com.github.conphucious.pricecomparator.dto.merchant.RegisteredMerchant;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -15,16 +15,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MerchantLoaderUtilTest {
 
-    // Can also test for FNF/IOException and IllegalStateException but these should inherently fail the below test.
+    // Can also test for IllegalStateException but these should inherently fail the below test.
     @Test
     void getMerchantDataReturnsSuccessfullyMappedMerchantDto() {
         List<Merchant> merchants = MerchantLoaderUtil.getMerchantData();
         int size = merchants.size();
 
         assertEquals(3, size);
-        assertEquals(merchants.get(0).getName(), MerchantName.APPEDIA);
-        assertEquals(merchants.get(1).getName(), MerchantName.MICROMAZON);
-        assertEquals(merchants.get(2).getName(), MerchantName.GOOGDIT);
+        assertEquals(merchants.get(0).getName(), RegisteredMerchant.APPEDIA);
+        assertEquals(merchants.get(1).getName(), RegisteredMerchant.MICROMAZON);
+        assertEquals(merchants.get(2).getName(), RegisteredMerchant.GOOGDIT);
 
         assertFalse(merchants.get(0).getEndpoint().isEmpty());
         assertFalse(merchants.get(1).getEndpoint().isEmpty());

@@ -23,10 +23,12 @@ public class PriceComparisonController {
     private final MerchantService merchantService;
     private final PriceComparisonService priceComparisonService;
 
-    public PriceComparisonController() {
-        requestService = new DefaultRequestService();
-        merchantService = new DefaultMerchantService();
-        priceComparisonService = new DefaultPriceComparisonService();
+    public PriceComparisonController(RequestService requestService,
+                                     MerchantService merchantService,
+                                     PriceComparisonService priceComparisonService) {
+        this.requestService = requestService;
+        this.merchantService = merchantService;
+        this.priceComparisonService = priceComparisonService;
     }
 
 

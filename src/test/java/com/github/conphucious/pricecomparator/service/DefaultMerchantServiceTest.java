@@ -2,7 +2,7 @@ package com.github.conphucious.pricecomparator.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
-import com.github.conphucious.pricecomparator.dto.merchant.RegisteredMerchant;
+import com.github.conphucious.pricecomparator.model.RegisteredMerchant;
 import com.github.conphucious.pricecomparator.model.UpcData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,6 +53,10 @@ public class DefaultMerchantServiceTest {
         when(httpResponseMicromazon.body()).thenReturn(TEST_MERCHANT_MICROMAZON_HTTP_RESP_BODY);
         when(httpResponseGoogdit.body()).thenReturn(TEST_MERCHANT_GOOGDIT_HTTP_RESP_BODY);
 
+        when(httpResponseAppedia.statusCode()).thenReturn(200);
+        when(httpResponseMicromazon.statusCode()).thenReturn(200);
+        when(httpResponseGoogdit.statusCode()).thenReturn(200);
+
         List<UpcData> upcDataList = defaultMerchantService.convertToUpcData(merchantHttpResponseMap, TEST_UPC);
         assertEquals(3, upcDataList.size());
 
@@ -71,6 +75,7 @@ public class DefaultMerchantServiceTest {
 
         Map<Merchant, HttpResponse<String>> merchantHttpResponseMap = Map.of(TEST_MERCHANT_UNREGISTERED_NAME, httpResponse);
         when(httpResponse.body()).thenReturn("test");
+        when(httpResponse.statusCode()).thenReturn(200);
 
         assertThrows(IllegalStateException.class,
                 () -> defaultMerchantService.convertToUpcData(merchantHttpResponseMap, TEST_UPC),
@@ -78,17 +83,19 @@ public class DefaultMerchantServiceTest {
     }
 
     @Test
-    void convertToUpcDataReturnsNonNullValues() {
+    void convertToUpcDataReturns200StatusCodeDataOnly() {
         HttpResponse<String> httpResponseGoogdit = Mockito.mock(HttpResponse.class);
+        HttpResponse<String> badHttpResponse = Mockito.mock(HttpResponse.class);
 
         // Map with two nulls
         Map<Merchant, HttpResponse<String>> merchantHttpResponseMap = new HashMap<>();
-        merchantHttpResponseMap.put(TEST_MERCHANT_APPEDIA, null);
-        merchantHttpResponseMap.put(TEST_MERCHANT_MICROMAZON, null);
+        merchantHttpResponseMap.put(TEST_MERCHANT_APPEDIA, badHttpResponse);
         merchantHttpResponseMap.put(TEST_MERCHANT_GOOGDIT, httpResponseGoogdit);
 
-
+        when(badHttpResponse.body()).thenReturn(TEST_MERCHANT_APPEDIA_HTTP_RESP_BODY);
+        when(badHttpResponse.statusCode()).thenReturn(500);
         when(httpResponseGoogdit.body()).thenReturn(TEST_MERCHANT_GOOGDIT_HTTP_RESP_BODY);
+        when(httpResponseGoogdit.statusCode()).thenReturn(200);
 
         List<UpcData> upcDataList = defaultMerchantService.convertToUpcData(merchantHttpResponseMap, TEST_UPC);
         assertEquals(1, upcDataList.size());

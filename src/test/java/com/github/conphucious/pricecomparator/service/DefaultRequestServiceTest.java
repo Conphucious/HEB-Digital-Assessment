@@ -25,5 +25,6 @@ public class DefaultRequestServiceTest {
     }
 
     // Static call MerchantLoaderUtil.getMerchantData(); makes for harder testing. Can use power mockito on top.
+    // Not doing so for the sake of time but ideally would have tests for response status code branched behaviour.
 
 }

@@ -1,4 +1,4 @@
-package com.github.conphucious.pricecomparator.dto.merchant;
+package com.github.conphucious.pricecomparator.model;
 
 import java.util.List;
 

@@ -3,9 +3,6 @@ package com.github.conphucious.pricecomparator.dto.merchant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 /**
  * DTO for Googdit merchant http response data from Jackson Object Mapper.

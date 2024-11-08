@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.conphucious.pricecomparator.dto.merchant.Appedia;
 import com.github.conphucious.pricecomparator.dto.merchant.Googdit;
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
-import com.github.conphucious.pricecomparator.dto.merchant.RegisteredMerchant;
 import com.github.conphucious.pricecomparator.dto.merchant.Micromazon;
+import com.github.conphucious.pricecomparator.model.RegisteredMerchant;
 import com.github.conphucious.pricecomparator.model.UpcData;
 
 import java.net.http.HttpResponse;
@@ -22,7 +22,8 @@ public class DefaultMerchantService implements MerchantService {
     public List<UpcData> convertToUpcData(Map<Merchant, HttpResponse<String>> merchantHttpResponseMap, int upc) {
         return merchantHttpResponseMap.entrySet()
                 .stream()
-                .filter(entrySet -> entrySet.getValue() != null) // non null values.
+                .filter(entrySet -> entrySet.getValue().statusCode() == 200) // only successful values.
+                // Alternatively can include all successful codes for a given response such as 201.
                 .map(entrySet -> mapMerchantToUpcData(entrySet.getKey(), entrySet.getValue(), upc))
                 .collect(Collectors.toList());
     }

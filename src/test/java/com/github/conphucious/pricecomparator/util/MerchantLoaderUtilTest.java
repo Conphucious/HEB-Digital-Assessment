@@ -1,7 +1,7 @@
 package com.github.conphucious.pricecomparator.util;
 
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
-import com.github.conphucious.pricecomparator.dto.merchant.RegisteredMerchant;
+import com.github.conphucious.pricecomparator.model.RegisteredMerchant;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

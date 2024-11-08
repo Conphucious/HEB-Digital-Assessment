@@ -2,9 +2,6 @@ package com.github.conphucious.pricecomparator.controller;
 
 import com.github.conphucious.pricecomparator.dto.merchant.Merchant;
 import com.github.conphucious.pricecomparator.model.UpcData;
-import com.github.conphucious.pricecomparator.service.DefaultMerchantService;
-import com.github.conphucious.pricecomparator.service.DefaultPriceComparisonService;
-import com.github.conphucious.pricecomparator.service.DefaultRequestService;
 import com.github.conphucious.pricecomparator.service.MerchantService;
 import com.github.conphucious.pricecomparator.service.PriceComparisonService;
 import com.github.conphucious.pricecomparator.service.RequestService;
@@ -32,6 +29,12 @@ public class PriceComparisonController {
     }
 
 
+    /**
+     * Determines and returns the URL(s) concatenated into a String of the lowest priced, available item w.r.t. UPC.
+     *
+     * @param upc
+     * @return URL(s) concatenated with commas from a vendor of a given UPC
+     */
     public String determineUrlOfLowestUpcPriceWithAvailability(int upc) {
         Map<Merchant, HttpResponse<String>> merchantHttpResponseMap = requestService.requestMerchantData(upc);
         List<UpcData> upcDataList = merchantService.convertToUpcData(merchantHttpResponseMap, upc);

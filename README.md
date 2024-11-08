@@ -68,3 +68,6 @@ at location(‘l’)
 • Make it easy to add additional merchant URLs to query for price comparison.
 
 • Write unit/integration tests.
+
+<h3>Original Repository</h3>
+`https://github.com/Conphucious/HEB-Digital-Assessment`

@@ -10,18 +10,16 @@ public class DefaultPriceComparisonService implements PriceComparisonService {
 
     @Override
     public List<UpcData> findLowestPriceAvailableUpcData(List<UpcData> upcDataList) {
-        return upcDataList
+        List<UpcData> sortedPriceUpcDataList = upcDataList
                 .stream()
                 .filter(UpcData::isAvailable)
                 .sorted(Comparator.comparingDouble(UpcData::getPrice))
-                .filter(upcd -> upcd.getPrice() == upcDataList.get(0).getPrice())
-                .collect(Collectors.toList()); // Multi find
+                .collect(Collectors.toList());
 
-//        return upcDataList
-//                .stream()
-//                .filter(UpcData::isAvailable)
-//                .min(Comparator.comparingDouble(UpcData::getPrice))
-//                .stream().collect(Collectors.toList()); // Single find
+        return sortedPriceUpcDataList
+                .stream()
+                .filter(upcd -> upcd.getPrice() == sortedPriceUpcDataList.get(0).getPrice())
+                .collect(Collectors.toList());
     }
 
 }

@@ -70,4 +70,19 @@ public class PriceComparisonControllerTest {
         assertTrue(urls.contains(testEndpointB));
     }
 
+    @Test
+    void determineUrlOfLowestUpcPriceWithAvailabilityOnEmptyListReturnsBackEmptyString() {
+        String testEndpoint = "test";
+
+        UpcData upcDataA = Mockito.mock(UpcData.class);
+
+        when(requestService.requestMerchantData(TEST_UPC)).thenReturn(Map.of());
+        when(merchantService.convertToUpcData(any(Map.class), any(Integer.class))).thenReturn(List.of());
+        when(priceComparisonService.findLowestPriceAvailableUpcData(any())).thenReturn(List.of());
+        when(upcDataA.getMerchant()).thenReturn(Merchant.builder().endpoint(testEndpoint).build());
+
+        String urls = priceComparisonController.determineUrlOfLowestUpcPriceWithAvailability(TEST_UPC);
+        assertTrue(urls.isEmpty());
+    }
+
 }

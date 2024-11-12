@@ -16,7 +16,7 @@ Build a price comparison tool that will get pricing and availability data from t
 
 ```
 URL https://appedia.heb-platform-interview.hebdigital-
-prd.com/api/v1/itemdata?upc=101
+prd.com/api/v1/itemdxata?upc=101
 
 Response {
 "price": "$4.77",
